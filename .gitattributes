@@ -1,0 +1,3 @@
+# 本机 git 的 core.autocrlf=true，会把检出后的脚本与源码写成 CRLF。
+# 这里统一钉成 LF：仓库与工作区都只存 LF，`bash scripts/*.sh` 不会被 \r 破坏。
+* text=auto eol=lf
