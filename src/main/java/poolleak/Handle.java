@@ -7,15 +7,20 @@ package poolleak;
  */
 public final class Handle implements AutoCloseable {
 
-    private final Pool pool;
+    private final Pool.Permit permit;
 
-    Handle(Pool pool) {
-        this.pool = pool;
+    Handle(Pool.Permit permit) {
+        this.permit = permit;
     }
 
-    /** 归还许可（见 README 对外保证第 2 条）。 */
+    /**
+     * 归还许可（见 README 对外保证第 2 条）。
+     *
+     * <p>幂等：重复调用不会多还。句柄从未 close 而被 GC 时，Cleaner 会触发同一个
+     * 一次性归还逻辑，因此「显式 close」与「GC 兜底」总共恰好归还一次。
+     */
     @Override
     public void close() {
-        pool.returnPermit();
+        permit.returnOnce();
     }
 }
